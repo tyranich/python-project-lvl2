@@ -1,6 +1,6 @@
 import argparse
-from email import parser
-parser = argparse.ArgumentParser(prog='Compares two configuration files ans shows a difference.')
-parser.add_argument("first_file", type=str, help="first file")
-parser.add_argument("second_file", type=str, help="second file")
+parser = argparse.ArgumentParser(description='Compares two configuration files ans shows a difference.')
+parser.add_argument("first_file")
+parser.add_argument("second_file")
+args = parser.parse_args()
 #parser.add_argument(firs_file)
