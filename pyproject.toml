@@ -4,12 +4,18 @@ version = "0.1.0"
 description = ""
 authors = ["tyranich <63128958+tyranich@users.noreply.github.com>"]
 license = "MIT"
-
+packages = [
+    { include = "gendiff"},
+]
 [tool.poetry.dependencies]
 python = "^3.9"
 
 [tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+gendiff = "gendiff.gendiff:main"
