@@ -17,7 +17,7 @@ jobs:
       - name: Install dependecies
         run: |
           pip install poetry 
-          make install 
+          poetry insta
       - name: Run linter and pytest
         run: |
-          make lint
+          poetry run flake8 gendiff
