@@ -2,7 +2,7 @@ name: run_lint
 on: push 
 jobs:
   my-job:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.8, 3.9]
