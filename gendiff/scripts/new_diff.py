@@ -1,5 +1,7 @@
 import os
+from traceback import print_tb
 from parse_data import parser_data
+import json
 
 def get_children(dict_):
     return {x:val for x, val in dict_.items()}
@@ -13,8 +15,7 @@ def get_value(dict_):
 
 def new_diff(dict1, dict2):
     dict_return = {}
-    level = 0 
-    def inside_func(dict_, dict1=None, dict2=None, parent = None):
+    def inside_func(dict_, dict1, dict2):
         unification_val = set(dict1) | set(dict2)
         if dict1 == {} and dict2 == {}:
                 return
@@ -25,7 +26,6 @@ def new_diff(dict1, dict2):
                     childs2 = get_children(dict2[_])
                     dict_[_] = {"status": "dict", "value":{}}
                     inside_func(dict_[_]["value"], childs1, childs2)
-
                 elif dict1[_] == dict2[_]:
                     dict_[_] = {"status":"not changed", "value":dict1[_]}
                 elif dict1[_] != dict2[_]:
@@ -33,12 +33,11 @@ def new_diff(dict1, dict2):
             
             elif _ in dict1.keys() and _ not in dict2.keys():
                     if isinstance(dict1[_], dict):
-                        dict_[_] = {"status": "deleted", "value": dict1[_]} #добавить парсинг словаря
+                        dict_[_] = {"status": "deleted", "value": dict1[_]}
                     else:
                         dict_[_] = {"status": "deleted", "value":dict1[_]}
 
             elif _ not in dict1.keys() and _ in dict2.keys():
-                added = {_:dict2[_]}
                 if isinstance(dict2[_], dict):
                     dict_[_] = {"status": "added", "value": dict2[_]}
                 else:
@@ -64,7 +63,7 @@ def dict_string(dict_, level):
             return string_
         return test_(dict_, level, str_)
 
-def stylish_test(_dict):
+def stylish(_dict):
     return_str = []
     level = 0
     def create_str(return_str, level, _dict, key=None):
@@ -108,6 +107,54 @@ def stylish_test(_dict):
         
         return return_str
     return create_str(return_str, level, _dict)
+
+def plain(_dict):
+    return_str = []
+    level = 0
+    def create_str(return_str, level, _dict, name):
+        tabs_two = "  "
+        for _ in _dict.keys():
+            if _dict[_]["status"] == "dict":
+                if level == 0:
+                    name2 = _
+                else:
+                    name2 = f"{name}.{_}"
+                level += 1
+                create_str(return_str, level + 2, _dict[_]['value'], name2)
+                level -= 1
+            elif _dict[_]["status"] == "added":
+                value = _dict[_]["value"]
+                if level == 0:
+                    if isinstance(_dict[_]["value"], dict) or isinstance(_dict[_]["value"], list):
+                        value = ["complex value"]
+                        print("Property '{}' was added with value: {}".format(_, value))
+                    else:
+                        print("Property '{}' was added with value: {}".format(_, value))
+                else:    
+                    if isinstance(_dict[_]["value"], dict) or isinstance(_dict[_]["value"], list):
+                        value = ["complex value"]
+                        print("Property '{}.{}' was added with value: {}".format(name, _, value))
+                    else:
+                        print("Property '{}.{}' was added with value: {}".format(name, _, value))
+
+            elif _dict[_]["status"] == "deleted":
+                if level == 0:
+                    print("Property '{}' was removed".format(_))
+                else: 
+                    print("Property '{}.{}' was removed".format(name, _))
+                
+
+            elif _dict[_]["status"] == "changed":
+                value1 = _dict[_]["value1"]
+                value2 = _dict[_]["value2"]
+                if isinstance(_dict[_]["value1"], dict) or isinstance(_dict[_]["value1"], list):
+                    value1 = '[comlex value]'
+                if isinstance(_dict[_]["value2"], dict) or isinstance(_dict[_]["value2"], list):
+                    value2 = '[complex value]'
+                print("Property '{}.{}' was update. From {} to {}".format(name,_,value1,value2))
+        return return_str
+    return create_str(return_str, level, _dict, "")
+
 path = os.getcwd()
 path1 = path + "\\gendiff\\tests\\fixtures\\third_file.json" 
 path2 = path + "\\gendiff\\tests\\fixtures\\four_file.json"
@@ -115,9 +162,11 @@ file1, file2 = parser_data(path1, path2)#(args.first_file, args.second_file)
 
 a = new_diff(file1, file2)
 print(a)
-c = stylish_test(a)
-g = ""
-for _ in c:
-    for _1 in _:
-        g += _1
-print(g)
+c = plain(a)#stylish_test(a)
+#g = ""
+#for _ in c:
+#    for _1 in _:
+#        g += _1
+#data = json.dumps(g)  
+#data = json.loads(data)
+#print(g)
