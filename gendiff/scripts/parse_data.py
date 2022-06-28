@@ -18,7 +18,3 @@ def parser_data(path1, path2):
     
     else:
         return None, None
-
-def get_children(dict_):
-    return [{x:val} for x, val in dict_.items() if isinstance(val, dict)]
-
