@@ -18,42 +18,45 @@ def get_value(dict_):
         return _1
 
 
+def is_changed(dict_return, sheet1=None, sheet2=None):
+
+    if sheet1 and sheet2:
+        if get_value(sheet1) == get_value(sheet2):
+            dict_return[get_name(sheet1)] = {"status": "not changed",
+                                             "value": get_value(sheet1)}
+        elif get_value(sheet1) != get_value(sheet2):
+
+            dict_return[get_name(sheet1)] = {"status": "changed",
+                                             "value1": get_value(sheet1),
+                                             "value2": get_value(sheet2)}
+
+
 def generate_diff(dict1, dict2, format_name=stylish):
     dict_return = {}
+    unification_val = set(dict1) | set(dict2)
+    for sheet in sorted(unification_val):
 
-    def inside_func(dict_, dict1, dict2):
+        if sheet in dict1.keys() and sheet in dict2.keys():
 
-        unification_val = set(dict1) | set(dict2)
-        #if dict1 == {} and dict2 == {}:
-            #return
-        for sheet in sorted(unification_val):
-            if sheet in dict1.keys() and sheet in dict2.keys():
+            if isinstance(dict1[sheet], dict) and \
+                    isinstance(dict2[sheet], dict):
 
-                if isinstance(dict1[sheet], dict) and \
-                        isinstance(dict2[sheet], dict):
+                childs1 = get_children(dict1[sheet])
+                childs2 = get_children(dict2[sheet])
+                dict_return[sheet] = {"status": "dict", "value": {}}
+                dict_return[sheet]["value"] = generate_diff(childs1, childs2)
+            else:
 
-                    childs1 = get_children(dict1[sheet])
-                    childs2 = get_children(dict2[sheet])
-                    dict_[sheet] = {"status": "dict", "value": {}}
-                    inside_func(dict_[sheet]["value"], childs1, childs2)
-                elif dict1[sheet] == dict2[sheet]:
+                is_changed(dict_return, {sheet: dict1[sheet]},
+                           {sheet: dict2[sheet]})
 
-                    dict_[sheet] = {"status": "not changed",
-                                    "value": dict1[sheet]}
-                elif dict1[sheet] != dict2[sheet]:
+        elif sheet in dict1.keys() and sheet not in dict2.keys():
 
-                    dict_[sheet] = {"status": "changed", "value1": dict1[sheet],
-                                    "value2": dict2[sheet]}
+            dict_return[sheet] = {"status": "deleted", "value": dict1[sheet]}
+        elif sheet not in dict1.keys() and sheet in dict2.keys():
 
-            elif sheet in dict1.keys() and sheet not in dict2.keys():
-
-                dict_[sheet] = {"status": "deleted", "value": dict1[sheet]}
-            elif sheet not in dict1.keys() and sheet in dict2.keys():
-
-                dict_[sheet] = {"status": "added", "value": dict2[sheet]}
-        return "".join(format_name(dict_))
-
-    return inside_func(dict_return, dict1, dict2)
+            dict_return[sheet] = {"status": "added", "value": dict2[sheet]}
+    return dict_return
 
 
 if __name__ == "__main__":
@@ -69,6 +72,8 @@ if __name__ == "__main__":
     file1, file2 = parser_data(args.first_file, args.second_file)
 
     if args.format == "plain":
-        print(generate_diff(file1, file2, plain))
+        done_dict = generate_diff(file1, file2, plain)
+        print("".join(plain(done_dict)))
     else:
-        print(generate_diff(file1, file2))
+        done_dict = generate_diff(file1, file2, plain)
+        print("".join(stylish(done_dict)))
