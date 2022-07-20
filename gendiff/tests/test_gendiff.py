@@ -1,4 +1,3 @@
-import pytest
 from gendiff.scripts.formaters.stylish import stylish
 from gendiff.scripts.gendiff import generate_diff
 from gendiff.scripts.parse_data import parser_data
@@ -14,6 +13,7 @@ path_yml = ("C:/Users/tyran/python-project-lvl2/"
             "gendiff/tests/fixtures/first_file.yml")
 file_json, file_json2 = parser_data(path_json, path_json_2)
 file_yml, file_yml2 = parser_data(path_yml, path_yml_2)
+
 
 def test_default():
     done_dict = generate_diff(file_json, file_json2)
@@ -31,7 +31,7 @@ def test_default():
                                            "- timeout: 20\n"
                                            "+ timeout: 50\n"
                                            "- verbose: True\n}")
-    
+
     done_dict = generate_diff(file_yml, file_yml2)
     assert "".join(stylish(done_dict)) == ("{\n- follow: False\n"
                                            "  host: hexlet.io\n"

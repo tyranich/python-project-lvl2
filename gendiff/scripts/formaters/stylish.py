@@ -64,27 +64,47 @@ def if_deleted(changeable_str, dict_proces, level, name):
 
 
 def if_changed(changeable_str, dict_proces, level, name):
-    if isinstance(dict_proces[name]["value1"], dict):
+    if isinstance(dict_proces["value1"], dict):
         changeable_str.append("{}- {}: {{\n".format(
                               TABS_TWO * (level + SING_IDENT), name,))
-        с = "".join(dict_string(dict_proces[name]["value1"],
+        с = "".join(dict_string(dict_proces["value1"],
                     level + DOUBLE_IDENT))
         changeable_str.append("{}".format(с))
     else:
         changeable_str.append("{}- {}: {}\n".format(
                               TABS_TWO * (level + SING_IDENT),
-                              name, dict_proces[name]["value1"]))
-
-    if isinstance(dict_proces[name]["value2"], dict):
+                              name, dict_proces["value1"]))
+    if isinstance(dict_proces["value2"], dict):
         changeable_str.append("{}+ {}: {{\n".format(
                               TABS_TWO * (level + SING_IDENT), name,))
-        с = "".join(dict_string(dict_proces[name]["value2"],
+        с = "".join(dict_string(dict_proces["value2"],
                     level + DOUBLE_IDENT))
         changeable_str.append("{}".format(с))
     else:
         changeable_str.append("{}+ {}: {}\n".format(
                               TABS_TWO * (level + SING_IDENT),
-                              name, dict_proces[name]["value2"]))
+                              name, dict_proces["value2"]))
+
+
+def if_not_changed(changeable_str, dict_proces, level, name):
+    changeable_str.append("{}{}: {}\n".format(
+                          TABS_TWO * (level + DOUBLE_IDENT),
+                          name, get_value(dict_proces)))
+
+
+def chose_status(dict_status, changeable_str, dict_proces, level, name):
+
+    if dict_status == "added":
+        return_function = if_added(changeable_str, dict_proces, level, name)
+    elif dict_status == "deleted":
+        return_function = if_deleted(changeable_str, dict_proces, level, name)
+    elif dict_status == "changed":
+        return_function = if_changed(changeable_str, dict_proces, level, name)
+    elif dict_status == "not changed":
+        return_function = if_not_changed(changeable_str,
+                                         dict_proces, level, name)
+
+    return return_function
 
 
 def stylish(_dict):
@@ -99,66 +119,8 @@ def stylish(_dict):
                 create_str(return_str, level + 2, get_value(_dict[_]))
                 return_str.append("{}}}\n".format(
                                   TABS_TWO * (level + DOUBLE_IDENT)))
+            else:
+                chose_status(_dict[_]["status"], return_str, _dict[_], level, _)
 
-            elif _dict[_]["status"] == "added":
-                if_added(return_str, _dict[_], level, _)
-                """
-                if isinstance(get_value(_dict[_]), dict):
-                    return_str.append("{}+ {}: {{\n".format(
-                                      TABS_TWO * (
-                                          level + SING_IDENT), _,))
-                    с = "".join(dict_string(get_value(
-                                _dict[_]), level + DOUBLE_IDENT))
-                    return_str.append("{}".format(с))
-                else:
-                    return_str.append("{}+ {}: {}\n".format(
-                                      TABS_TWO * (level + SING_IDENT),
-                                      _, get_value(_dict[_])))
-                """
-            elif _dict[_]["status"] == "deleted":
-                if_deleted(return_str, _dict[_], level, _)
-                """
-                if isinstance(get_value(_dict[_]), dict):
-                    return_str.append("{}- {}: {{\n".format(
-                                      TABS_TWO * (
-                                          level + SING_IDENT), _,))
-                    с = "".join(dict_string(get_value(_dict[_]),
-                                level + DOUBLE_IDENT))
-                    return_str.append("{}".format(с))
-                else:
-                    return_str.append("{}- {}: {}\n".format(
-                                      TABS_TWO * (level + SING_IDENT),
-                                      _, get_value(_dict[_])))
-                """
-            elif _dict[_]["status"] == "changed":
-                if_changed(return_str, _dict, level, _)
-                """
-                if isinstance(_dict[_]["value1"], dict):
-                    return_str.append("{}- {}: {{\n".format(
-                                      TABS_TWO * (
-                                          level + SING_IDENT), _,))
-                    с = "".join(dict_string(_dict[_]["value1"],
-                                level + DOUBLE_IDENT))
-                    return_str.append("{}".format(с))
-                else:
-                    return_str.append("{}- {}: {}\n".format(
-                                      TABS_TWO * (level + SING_IDENT),
-                                      _, _dict[_]["value1"]))
-
-                if isinstance(_dict[_]["value2"], dict):
-                    return_str.append("{}+ {}: {{\n".format(
-                                      TABS_TWO * (level + SING_IDENT), _,))
-                    с = "".join(dict_string(_dict[_]["value2"],
-                                level + DOUBLE_IDENT))
-                    return_str.append("{}".format(с))
-                else:
-                    return_str.append("{}+ {}: {}\n".format(
-                                      TABS_TWO * (level + SING_IDENT),
-                                      _, _dict[_]["value2"]))
-                """
-            elif _dict[_]["status"] == "not changed":
-                return_str.append("{}{}: {}\n".format(
-                                  TABS_TWO * (level + DOUBLE_IDENT),
-                                  _, get_value(_dict[_])))
         return return_str
     return create_str(return_str, level, _dict)
