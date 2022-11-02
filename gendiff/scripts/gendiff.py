@@ -2,6 +2,7 @@ import argparse
 from parse_data import parser_data
 from formaters.stylish import stylish
 from formaters.plain import plain
+import json
 
 
 def get_children(dict_):
@@ -31,7 +32,7 @@ def is_changed(dict_return, sheet1=None, sheet2=None):
                                              "value2": get_value(sheet2)}
 
 
-def generate_diff(dict1, dict2, format_name=stylish):
+def generate_diff(dict1, dict2):
     dict_return = {}
     unification_val = set(dict1) | set(dict2)
     for sheet in sorted(unification_val):
@@ -72,8 +73,16 @@ if __name__ == "__main__":
     file1, file2 = parser_data(args.first_file, args.second_file)
 
     if args.format == "plain":
-        done_dict = generate_diff(file1, file2, plain)
+        done_dict = generate_diff(file1, file2)
         print("".join(plain(done_dict)))
+    elif args.format == "json":
+        done_dict = generate_diff(file1, file2)
+        done_string = "".join(stylish(done_dict))
+        data = json.dumps(done_string)
+        print(data)
+        data = json.loads(data)
+        print(data)
     else:
-        done_dict = generate_diff(file1, file2, plain)
+        done_dict = generate_diff(file1, file2)
+        print(done_dict)
         print("".join(stylish(done_dict)))

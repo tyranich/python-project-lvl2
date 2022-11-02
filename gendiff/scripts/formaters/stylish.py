@@ -1,10 +1,8 @@
+from getters import changed_for_json, get_value, get_children
+
 SING_IDENT = 1
 DOUBLE_IDENT = 2
 TABS_TWO = "  "
-
-
-def get_children(dict_):
-    return {x: val for x, val in dict_.items()}
 
 
 def get_name(dict_):
@@ -12,29 +10,25 @@ def get_name(dict_):
         return _
 
 
-def get_value(dict_):
-    return dict_['value']
-
-
 def dict_string(dict_, level):
     str_ = []
     tabs = "  "
 
-    def test_(dict1, level_, string_):
+    def inner(dict1, level_, string_):
         childs = get_children(dict1)
         level_ += 2
         for _ in childs:
 
             if isinstance(childs[_], dict):
                 string_.append((tabs * level_) + _ + ": {\n")
-                test_(childs[_], level_, string_)
+                inner(childs[_], level_, string_)
             else:
                 string_.append((tabs * (level_)) + "{}: {}"
-                               .format(_, childs[_]) + "\n")
+                               .format(_, changed_for_json(childs[_])) + "\n")
         level_ -= 1
         string_.append(tabs * (level_ - 1) + "}\n")
         return string_
-    return test_(dict_, level, str_)
+    return inner(dict_, level, str_)
 
 
 def if_added(changeable_str, dict_proces, level, name):
@@ -73,7 +67,7 @@ def if_changed(changeable_str, dict_proces, level, name):
     else:
         changeable_str.append("{}- {}: {}\n".format(
                               TABS_TWO * (level + SING_IDENT),
-                              name, dict_proces["value1"]))
+                              name, changed_for_json(dict_proces["value1"])))#dict_proces["value1"]))
     if isinstance(dict_proces["value2"], dict):
         changeable_str.append("{}+ {}: {{\n".format(
                               TABS_TWO * (level + SING_IDENT), name,))
@@ -83,7 +77,7 @@ def if_changed(changeable_str, dict_proces, level, name):
     else:
         changeable_str.append("{}+ {}: {}\n".format(
                               TABS_TWO * (level + SING_IDENT),
-                              name, dict_proces["value2"]))
+                              name, changed_for_json(dict_proces["value2"])))#dict_proces["value2"]))
 
 
 def if_not_changed(changeable_str, dict_proces, level, name):
@@ -108,9 +102,8 @@ def chose_status(dict_status, changeable_str, dict_proces, level, name):
 
 
 def stylish(_dict):
-    return_str = []
+    return_str = ["{    \n"]
     level = 0
-
     def create_str(return_str, level, _dict, key=None):
         for _ in _dict.keys():
             if _dict[_]["status"] == "dict":
@@ -121,6 +114,7 @@ def stylish(_dict):
                                   TABS_TWO * (level + DOUBLE_IDENT)))
             else:
                 chose_status(_dict[_]["status"], return_str, _dict[_], level, _)
-
+        if level == 0:
+            return_str.append("}")
         return return_str
     return create_str(return_str, level, _dict)

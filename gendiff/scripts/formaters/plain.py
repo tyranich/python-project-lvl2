@@ -1,13 +1,12 @@
-def get_value(dict_):
-    return dict_['value']
+from getters import changed_for_json, get_value
 
 
 def if_added(level, dict_, root, name):
-    value = dict_[name]["value"]
+    value = get_value(dict_[name])#["value"] 
     if level == 0:
-
-        if isinstance(dict_[name]["value"], dict) or \
-                isinstance(dict_[name]["value"], list):
+        #if isinstance(dict_[name]["value"], dict) or \
+        if isinstance(get_value(dict_[name]), dict) or \
+                isinstance(get_value(dict_[name]), list): #isinstance(dict_[name]["value"], list):
             value = ["complex value"]
             print("Property '{}' was added with value: {}"
                   .format(name, value))
@@ -15,8 +14,9 @@ def if_added(level, dict_, root, name):
             print("Property '{}' was added with value: {}"
                   .format(name, value))
     else:
-        if isinstance(dict_[name]["value"], dict) or \
-                isinstance(dict_[name]["value"], list):
+        #if isinstance(dict_[name]["value"], dict) or \
+        if isinstance(get_value(dict_[name]), dict) or \
+                isinstance(get_value(dict_[name]), list):#isinstance(dict_[name]["value"], list):
             value = ["complex value"]
             print("Property '{}.{}' was added with value: {}".
                   format(root, name, value))
@@ -33,8 +33,8 @@ def if_deleted(level, root, name):
 
 
 def if_changed(level, dict_, root, name):
-    value1 = dict_[name]["value1"]
-    value2 = dict_[name]["value2"]
+    value1 = changed_for_json(dict_[name]["value1"])
+    value2 = changed_for_json(dict_[name]["value2"])
     if isinstance(dict_[name]["value1"], dict) or \
             isinstance(dict_[name]["value1"], list):
         value1 = '[comlex value]'
@@ -61,19 +61,19 @@ def plain(_dict):
 
     def create_str(return_str, level, _dict, name):
 
-        for _ in _dict.keys():
+        for key in _dict.keys():
 
-            if _dict[_]["status"] == "dict":
+            if _dict[key]["status"] == "dict":
                 if level == 0:
-                    name2 = _
+                    name2 = key
                 else:
-                    name2 = f"{name}.{_}"
+                    name2 = f"{name}.{key}"
                 level += 1
-                create_str(return_str, level + 2, _dict[_]['value'], name2)
+                create_str(return_str, level + 2, get_value(_dict[key]), name2) #['value']
                 level -= 1
             else:
 
-                choise_status(_dict[_]["status"], level, _dict, name, _)
+                choise_status(_dict[key]["status"], level, _dict, name, key)
 
         return return_str
     return create_str(return_str, level, _dict, "")
