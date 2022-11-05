@@ -1,9 +1,9 @@
 def changed_for_json(val):
-    if val == True:
+    if val is True:
         return "true"
-    elif val == None:
+    elif val is None:
         return "null"
-    elif val == False:
+    elif val is False:
         return "false"
     else:
         return val
