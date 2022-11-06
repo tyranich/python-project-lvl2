@@ -67,7 +67,7 @@ def if_changed(changeable_str, dict_proces, level, name):
     else:
         changeable_str.append("{}- {}: {}\n".format(
                               TABS_TWO * (level + SING_IDENT),
-                              name, changed_for_json(dict_proces["value1"])))#dict_proces["value1"]))
+                              name, changed_for_json(dict_proces["value1"])))
     if isinstance(dict_proces["value2"], dict):
         changeable_str.append("{}+ {}: {{\n".format(
                               TABS_TWO * (level + SING_IDENT), name,))
@@ -77,7 +77,7 @@ def if_changed(changeable_str, dict_proces, level, name):
     else:
         changeable_str.append("{}+ {}: {}\n".format(
                               TABS_TWO * (level + SING_IDENT),
-                              name, changed_for_json(dict_proces["value2"])))#dict_proces["value2"]))
+                              name, changed_for_json(dict_proces["value2"])))
 
 
 def if_not_changed(changeable_str, dict_proces, level, name):
@@ -104,6 +104,7 @@ def chose_status(dict_status, changeable_str, dict_proces, level, name):
 def stylish(_dict):
     return_str = ["{    \n"]
     level = 0
+    
     def create_str(return_str, level, _dict, key=None):
         for _ in _dict.keys():
             if _dict[_]["status"] == "dict":

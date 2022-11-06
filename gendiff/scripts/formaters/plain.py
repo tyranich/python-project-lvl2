@@ -2,11 +2,10 @@ from getters import changed_for_json, get_value
 
 
 def if_added(level, dict_, root, name):
-    value = get_value(dict_[name])#["value"] 
+    value = get_value(dict_[name])
     if level == 0:
-        #if isinstance(dict_[name]["value"], dict) or \
         if isinstance(get_value(dict_[name]), dict) or \
-                isinstance(get_value(dict_[name]), list): #isinstance(dict_[name]["value"], list):
+                isinstance(get_value(dict_[name]), list):
             value = ["complex value"]
             print("Property '{}' was added with value: {}"
                   .format(name, value))
@@ -14,9 +13,8 @@ def if_added(level, dict_, root, name):
             print("Property '{}' was added with value: {}"
                   .format(name, value))
     else:
-        #if isinstance(dict_[name]["value"], dict) or \
         if isinstance(get_value(dict_[name]), dict) or \
-                isinstance(get_value(dict_[name]), list):#isinstance(dict_[name]["value"], list):
+                isinstance(get_value(dict_[name]), list):
             value = ["complex value"]
             print("Property '{}.{}' was added with value: {}".
                   format(root, name, value))
@@ -69,7 +67,7 @@ def plain(_dict):
                 else:
                     name2 = f"{name}.{key}"
                 level += 1
-                create_str(return_str, level + 2, get_value(_dict[key]), name2) #['value']
+                create_str(return_str, level + 2, get_value(_dict[key]), name2)
                 level -= 1
             else:
 
