@@ -1,4 +1,4 @@
-from gendiff.scripts.getters import changed_for_json, get_value, get_children
+from gendiff_.scripts.getters import changed_for_json, get_value, get_children
 
 SING_IDENT = 1
 DOUBLE_IDENT = 2

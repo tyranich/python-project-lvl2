@@ -1,6 +1,6 @@
-from gendiff.scripts.formaters.stylish import stylish
-from gendiff.scripts.gendiff import generate_diff
-from gendiff.scripts.parse_data import parser_data
+from gendiff_.scripts.formaters.stylish import stylish
+from gendiff_.scripts.gendiff import generate_diff
+from gendiff_.scripts.parse_data import parser_data
 
 path_json_2 = ("C:/Users/tyran/python-project-lvl2/"
                "tests/fixtures/second_file.json")
