@@ -1,7 +1,7 @@
 import argparse
-from gendiff_.scripts.parse_data import parser_data
-from gendiff_.scripts.formaters.stylish import stylish
-from gendiff_.scripts.formaters.plain import plain
+from gendiff.scripts.parse_data import parser_data
+from gendiff.scripts.formaters.stylish import stylish
+from gendiff.scripts.formaters.plain import plain
 import json
 
 
@@ -60,7 +60,7 @@ def generate_diff(dict1, dict2):
     return dict_return
 
 
-if __name__ == "__main__":
+def main():
 
     description = 'Compares two configuration files ans shows a difference.'
     parser = argparse.ArgumentParser(description)
@@ -86,3 +86,7 @@ if __name__ == "__main__":
         done_dict = generate_diff(file1, file2)
         print(done_dict)
         print("".join(stylish(done_dict)))
+
+
+if __name__ == "__main__":
+    main()
