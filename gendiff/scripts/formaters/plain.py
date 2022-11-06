@@ -1,4 +1,4 @@
-from gendiff_.scripts.getters import changed_for_json, get_value
+from gendiff.scripts.getters import changed_for_json, get_value
 
 
 def if_added(level, dict_, root, name):
