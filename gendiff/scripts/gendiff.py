@@ -1,7 +1,7 @@
 import argparse
-from parse_data import parser_data
-from formaters.stylish import stylish
-from formaters.plain import plain
+from gendiff.scripts.parse_data import parser_data
+from gendiff.scripts.formaters.stylish import stylish
+from gendiff.scripts.formaters.plain import plain
 import json
 
 
