@@ -31,36 +31,36 @@ def is_changed(dict_return, sheet1=None, sheet2=None):
                                              "value1": get_value(sheet1),
                                              "value2": get_value(sheet2)}
 
-
 def generate_diff(dict1, dict2):
-    print(dict1, dict2)
     dict1, dict2 = parser_data(dict1, dict2)
-    dict_return = {}
-    unification_val = set(dict1) | set(dict2)
-    for sheet in sorted(unification_val):
+    def inner(dict1, dict2):
+        print(dict1, dict2)
+        dict_return = {}
+        unification_val = set(dict1) | set(dict2)
+        for sheet in sorted(unification_val):
 
-        if sheet in dict1.keys() and sheet in dict2.keys():
+            if sheet in dict1.keys() and sheet in dict2.keys():
 
-            if isinstance(dict1[sheet], dict) and \
-                    isinstance(dict2[sheet], dict):
+                if isinstance(dict1[sheet], dict) and \
+                        isinstance(dict2[sheet], dict):
 
-                childs1 = get_children(dict1[sheet])
-                childs2 = get_children(dict2[sheet])
-                dict_return[sheet] = {"status": "dict", "value": {}}
-                dict_return[sheet]["value"] = generate_diff(childs1, childs2)
-            else:
+                    childs1 = get_children(dict1[sheet])
+                    childs2 = get_children(dict2[sheet])
+                    dict_return[sheet] = {"status": "dict", "value": {}}
+                    dict_return[sheet]["value"] = inner(childs1, childs2)
+                else:
 
-                is_changed(dict_return, {sheet: dict1[sheet]},
-                           {sheet: dict2[sheet]})
+                    is_changed(dict_return, {sheet: dict1[sheet]},
+                            {sheet: dict2[sheet]})
 
-        elif sheet in dict1.keys() and sheet not in dict2.keys():
+            elif sheet in dict1.keys() and sheet not in dict2.keys():
 
-            dict_return[sheet] = {"status": "deleted", "value": dict1[sheet]}
-        elif sheet not in dict1.keys() and sheet in dict2.keys():
+                dict_return[sheet] = {"status": "deleted", "value": dict1[sheet]}
+            elif sheet not in dict1.keys() and sheet in dict2.keys():
 
-            dict_return[sheet] = {"status": "added", "value": dict2[sheet]}
-    return dict_return
-
+                dict_return[sheet] = {"status": "added", "value": dict2[sheet]}
+        return dict_return
+    return inner(dict1, dict2)
 
 def main():
 
