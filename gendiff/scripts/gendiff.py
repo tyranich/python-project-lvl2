@@ -34,6 +34,7 @@ def is_changed(dict_return, sheet1=None, sheet2=None):
 
 def generate_diff(dict1, dict2):
     print(dict1, dict2)
+    dict1, dict2 = parser_data(dict1, dict2)
     dict_return = {}
     unification_val = set(dict1) | set(dict2)
     for sheet in sorted(unification_val):
