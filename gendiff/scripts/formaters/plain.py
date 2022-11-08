@@ -1,56 +1,68 @@
 from gendiff.scripts.getters import changed_for_json, get_value
 
+def is_string(val):
+    if isinstance(val, str):
+        if val == "false":
+            return val
+        elif val == "true":
+            return val
+        elif val == "null":
+            return val
+        else:
+            return "'{}'".format(val)
+    else:
+        return val
 
-def if_added(level, dict_, root, name):
-    value = get_value(dict_[name])
+def if_added(level, return_str, dict_, root, name):
+    value = is_string(get_value(dict_[name]))
     if level == 0:
         if isinstance(get_value(dict_[name]), dict) or \
                 isinstance(get_value(dict_[name]), list):
-            value = ["complex value"]
-            print("Property '{}' was added with value: {}"
+            value = "[complex value]"
+            return_str.append("Property '{}' was added with value: {}\n"
                   .format(name, value))
         else:
-            print("Property '{}' was added with value: {}"
+            return_str.append("Property '{}' was added with value: {}\n"
                   .format(name, value))
     else:
         if isinstance(get_value(dict_[name]), dict) or \
                 isinstance(get_value(dict_[name]), list):
-            value = ["complex value"]
-            print("Property '{}.{}' was added with value: {}".
+            value = "[complex value]"
+            return_str.append("Property '{}.{}' was added with value: {}\n".
                   format(root, name, value))
         else:
-            print("Property '{}.{}' was added with value: {}".
+            return_str.append("Property '{}.{}' was added with value: {}\n".
                   format(root, name, value))
 
 
-def if_deleted(level, root, name):
+def if_deleted(level, return_str, root, name):
     if level == 0:
-        print("Property '{}' was removed".format(name))
+        return_str.append("Property '{}' was removed\n".format(name))
     else:
-        print("Property '{}.{}' was removed".format(root, name))
+        return_str.append("Property '{}.{}' was removed\n".format(root, name))
 
 
-def if_changed(level, dict_, root, name):
-    value1 = changed_for_json(dict_[name]["value1"])
-    value2 = changed_for_json(dict_[name]["value2"])
+def if_changed(level, return_str, dict_, root, name):
+    value1 = is_string(changed_for_json(dict_[name]["value1"]))
+    value2 = is_string(changed_for_json(dict_[name]["value2"]))
     if isinstance(dict_[name]["value1"], dict) or \
             isinstance(dict_[name]["value1"], list):
-        value1 = '[comlex value]'
+        value1 = '[complex value]'
     if isinstance(dict_[name]["value2"], dict) or \
             isinstance(dict_[name]["value2"], list):
         value2 = '[complex value]'
-    print("Property '{}.{}' was update. From {} to {}".
+    return_str.append("Property '{}.{}' was updated. From {} to {}\n".
           format(root, name, value1, value2))
 
 
-def choise_status(dict_status, level, dict_, root, name):
+def choise_status(dict_status, return_str, level, dict_, root, name):
 
     if dict_status == "added":
-        if_added(level, dict_, root, name)
+        if_added(level, return_str, dict_, root, name)
     elif dict_status == "deleted":
-        if_deleted(level, root, name)
+        if_deleted(level, return_str, root, name)
     elif dict_status == "changed":
-        if_changed(level, dict_, root, name)
+        if_changed(level, return_str, dict_, root, name)
 
 
 def plain(_dict):
@@ -70,8 +82,7 @@ def plain(_dict):
                 create_str(return_str, level + 2, get_value(_dict[key]), name2)
                 level -= 1
             else:
-
-                choise_status(_dict[key]["status"], level, _dict, name, key)
+                choise_status(_dict[key]["status"], return_str, level, _dict, name, key)
 
         return return_str
     return create_str(return_str, level, _dict, "")

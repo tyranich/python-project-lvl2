@@ -68,6 +68,7 @@ def generate_diff(dict1, dict2, formater='stylish'):
 
                 dict_return[sheet] = {"status": "added", "value": dict2[sheet]}
         return dict_return
+    print()
     return "".join(formater(inner(dict1, dict2)))
 
 def main():
