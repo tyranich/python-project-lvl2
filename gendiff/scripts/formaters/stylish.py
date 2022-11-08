@@ -102,7 +102,7 @@ def chose_status(dict_status, changeable_str, dict_proces, level, name):
 
 
 def stylish(_dict):
-    return_str = ["{    \n"]
+    return_str = ["{\n"]
     level = 0
     def create_str(return_str, level, _dict, key=None):
         
