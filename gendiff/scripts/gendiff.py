@@ -32,32 +32,32 @@ def is_changed(dict_return, sheet1=None, sheet2=None):
                                              "value2": get_value(sheet2)}
 
 
-def generate_diff(dict1, dict2):
-    file1, file2 = parser_data(dict1, dict2)
+def generate_diff(path1, path2):
     dict_return = {}
-    unification_val = set(file1) | set(file2)
+    dict1, dict2 = parser_data(path1, path2)
+    unification_val = set(dict1) | set(dict2)
     for sheet in sorted(unification_val):
 
-        if sheet in file1.keys() and sheet in file2.keys():
+        if sheet in dict1.keys() and sheet in dict2.keys():
 
-            if isinstance(file1[sheet], dict) and \
-                    isinstance(file2[sheet], dict):
+            if isinstance(dict1[sheet], dict) and \
+                    isinstance(dict2[sheet], dict):
 
-                childs1 = get_children(file1[sheet])
-                childs2 = get_children(file2[sheet])
+                childs1 = get_children(dict1[sheet])
+                childs2 = get_children(dict2[sheet])
                 dict_return[sheet] = {"status": "dict", "value": {}}
                 dict_return[sheet]["value"] = generate_diff(childs1, childs2)
             else:
 
-                is_changed(dict_return, {sheet: file1[sheet]},
-                           {sheet: file2[sheet]})
+                is_changed(dict_return, {sheet: dict1[sheet]},
+                           {sheet: dict2[sheet]})
 
-        elif sheet in file1.keys() and sheet not in file2.keys():
+        elif sheet in dict1.keys() and sheet not in dict2.keys():
 
-            dict_return[sheet] = {"status": "deleted", "value": file1[sheet]}
-        elif sheet not in file1.keys() and sheet in file2.keys():
+            dict_return[sheet] = {"status": "deleted", "value": dict1[sheet]}
+        elif sheet not in dict1.keys() and sheet in dict2.keys():
 
-            dict_return[sheet] = {"status": "added", "value": file2[sheet]}
+            dict_return[sheet] = {"status": "added", "value": dict2[sheet]}
     return dict_return
 
 

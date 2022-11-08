@@ -16,7 +16,7 @@ file_yml, file_yml2 = parser_data(path_yml, path_yml_2)
 
 
 def test_default():
-    done_dict = generate_diff(file_json, file_json2)
+    done_dict = generate_diff(path_json, path_json_2)
     print(done_dict)
     a = "".join(stylish(done_dict))
     print(a)
