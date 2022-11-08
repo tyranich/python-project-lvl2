@@ -31,7 +31,16 @@ def is_changed(dict_return, sheet1=None, sheet2=None):
                                              "value1": get_value(sheet1),
                                              "value2": get_value(sheet2)}
 
-def generate_diff(dict1, dict2, formater=stylish):
+
+def choising_formater(formater:str):
+    if formater == "stylish":
+        return stylish
+    elif formater == "plain":
+        return plain
+
+
+def generate_diff(dict1, dict2, formater='stylish'):
+    formater = choising_formater(formater)
     dict1, dict2 = parser_data(dict1, dict2)
     def inner(dict1, dict2):
         dict_return = {}
