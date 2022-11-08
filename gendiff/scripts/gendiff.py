@@ -32,9 +32,8 @@ def is_changed(dict_return, sheet1=None, sheet2=None):
                                              "value2": get_value(sheet2)}
 
 
-def generate_diff(path1, path2):
+def generate_diff(dict1, dict2):
     dict_return = {}
-    dict1, dict2 = parser_data(path1, path2)
     unification_val = set(dict1) | set(dict2)
     for sheet in sorted(unification_val):
 
