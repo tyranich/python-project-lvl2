@@ -31,7 +31,7 @@ def is_changed(dict_return, sheet1=None, sheet2=None):
                                              "value1": get_value(sheet1),
                                              "value2": get_value(sheet2)}
 
-def generate_diff(dict1, dict2):
+def generate_diff(dict1, dict2, formater=stylish):
     dict1, dict2 = parser_data(dict1, dict2)
     def inner(dict1, dict2):
         dict_return = {}
@@ -59,7 +59,7 @@ def generate_diff(dict1, dict2):
 
                 dict_return[sheet] = {"status": "added", "value": dict2[sheet]}
         return dict_return
-    return inner(dict1, dict2)
+    return "".join(formater(inner(dict1, dict2)))
 
 def main():
 
