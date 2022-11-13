@@ -82,23 +82,13 @@ def main():
     parser.add_argument("-f", "--format", type=str,
                         default="stylish", help='set format of output')
     args = parser.parse_args()
+    formater = args.format
 
-    file1, file2 = parser_data(args.first_file, args.second_file)
-
-    if args.format == "plain":
-        done_dict = generate_diff(file1, file2)
-        print("".join(plain(done_dict)))
-    elif args.format == "json":
-        done_dict = generate_diff(file1, file2)
-        done_string = "".join(stylish(done_dict))
-        data = json.dumps(done_string)
-        print(data)
-        data = json.loads(data)
-        print(data)
+    if formater:
+        print(generate_diff(args.first_file, args.second_file, formater))
     else:
-        done_dict = generate_diff(file1, file2)
-        print(done_dict)
-        print("".join(stylish(done_dict)))
+        print(generate_diff(args.first_file, args.second_file))
+
 
 
 if __name__ == "__main__":
