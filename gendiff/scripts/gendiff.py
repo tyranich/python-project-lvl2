@@ -2,6 +2,7 @@ import argparse
 from gendiff.scripts.parse_data import parser_data
 from gendiff.scripts.formaters.stylish import stylish
 from gendiff.scripts.formaters.plain import plain
+from gendiff.scripts.formaters.json import json_formater
 import json
 
 
@@ -37,6 +38,8 @@ def choising_formater(formater:str):
         return stylish
     elif formater == "plain":
         return plain
+    elif formater == "json":
+        return json_formater
 
 
 def generate_diff(dict1, dict2, formater='stylish'):
@@ -68,7 +71,7 @@ def generate_diff(dict1, dict2, formater='stylish'):
 
                 dict_return[sheet] = {"status": "added", "value": dict2[sheet]}
         return dict_return
-    return "".join(formater(inner(dict1, dict2)))
+    return formater(inner(dict1, dict2))
 
 def main():
 

@@ -86,4 +86,4 @@ def plain(_dict):
         if level == 0:
             return_str[-1] = return_str[-1][:-1]
         return return_str
-    return create_str(return_str, level, _dict, "")
+    return "".join(create_str(return_str, level, _dict, ""))

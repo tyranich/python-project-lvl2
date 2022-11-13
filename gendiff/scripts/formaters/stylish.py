@@ -118,4 +118,4 @@ def stylish(_dict):
         if level == 0:
             return_str.append("}")
         return return_str
-    return create_str(return_str, level, _dict)
+    return "".join(create_str(return_str, level, _dict))
