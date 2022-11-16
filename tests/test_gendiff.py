@@ -26,6 +26,7 @@ def test_default():
                  "  - timeout: 50\n"
                  "  + timeout: 20\n"
                  "  + verbose: true\n}")
+
     """
     done_dict = generate_diff(file_json2, file_json)
     print(done_dict)
