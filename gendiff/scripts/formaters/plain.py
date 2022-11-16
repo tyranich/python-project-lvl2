@@ -1,5 +1,6 @@
 from gendiff.scripts.getters import changed_for_json, get_value
 
+
 def is_string(val):
     if isinstance(val, str):
         if val == "false":
@@ -13,6 +14,7 @@ def is_string(val):
     else:
         return val
 
+
 def if_added(level, return_str, dict_, root, name):
     value = is_string(get_value(dict_[name]))
     if level == 0:
@@ -20,19 +22,19 @@ def if_added(level, return_str, dict_, root, name):
                 isinstance(get_value(dict_[name]), list):
             value = "[complex value]"
             return_str.append("Property '{}' was added with value: {}\n"
-                  .format(name, value))
+                              .format(name, value))
         else:
             return_str.append("Property '{}' was added with value: {}\n"
-                  .format(name, value))
+                              .format(name, value))
     else:
         if isinstance(get_value(dict_[name]), dict) or \
                 isinstance(get_value(dict_[name]), list):
             value = "[complex value]"
             return_str.append("Property '{}.{}' was added with value: {}\n".
-                  format(root, name, value))
+                              format(root, name, value))
         else:
             return_str.append("Property '{}.{}' was added with value: {}\n".
-                  format(root, name, value))
+                              format(root, name, value))
 
 
 def if_deleted(level, return_str, root, name):
@@ -52,7 +54,7 @@ def if_changed(level, return_str, dict_, root, name):
             isinstance(dict_[name]["value2"], list):
         value2 = '[complex value]'
     return_str.append("Property '{}.{}' was updated. From {} to {}\n".
-          format(root, name, value1, value2))
+                      format(root, name, value1, value2))
 
 
 def choise_status(dict_status, return_str, level, dict_, root, name):
@@ -82,7 +84,8 @@ def plain(_dict):
                 create_str(return_str, level + 2, get_value(_dict[key]), name2)
                 level -= 1
             else:
-                choise_status(_dict[key]["status"], return_str, level, _dict, name, key)
+                choise_status(_dict[key]["status"],
+                              return_str, level, _dict, name, key)
         if level == 0:
             return_str[-1] = return_str[-1][:-1]
         return return_str

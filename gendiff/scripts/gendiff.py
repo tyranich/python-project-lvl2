@@ -3,7 +3,6 @@ from gendiff.scripts.parse_data import parser_data
 from gendiff.scripts.formaters.stylish import stylish
 from gendiff.scripts.formaters.plain import plain
 from gendiff.scripts.formaters.json import json_formater
-import json
 
 
 def get_children(dict_):
@@ -33,7 +32,8 @@ def is_changed(dict_return, sheet1=None, sheet2=None):
                                              "value2": get_value(sheet2)}
 
 
-def choising_formater(formater:str):
+def choising_formater(formater):
+
     if formater == "stylish":
         return stylish
     elif formater == "plain":
@@ -42,10 +42,13 @@ def choising_formater(formater:str):
         return json_formater
 
 
-def generate_diff(dict1, dict2, formater='stylish'):
+def generate_diff(dict1, dict2, formater='stylish'):  # noqa: C901
+
     formater = choising_formater(formater)
     dict1, dict2 = parser_data(dict1, dict2)
+
     def inner(dict1, dict2):
+
         dict_return = {}
         unification_val = set(dict1) | set(dict2)
         for sheet in sorted(unification_val):
@@ -60,18 +63,19 @@ def generate_diff(dict1, dict2, formater='stylish'):
                     dict_return[sheet] = {"status": "dict", "value": {}}
                     dict_return[sheet]["value"] = inner(childs1, childs2)
                 else:
-
                     is_changed(dict_return, {sheet: dict1[sheet]},
-                            {sheet: dict2[sheet]})
+                               {sheet: dict2[sheet]})
 
             elif sheet in dict1.keys() and sheet not in dict2.keys():
+                dict_return[sheet] = {"status": "deleted",
+                                      "value": dict1[sheet]}
 
-                dict_return[sheet] = {"status": "deleted", "value": dict1[sheet]}
             elif sheet not in dict1.keys() and sheet in dict2.keys():
 
                 dict_return[sheet] = {"status": "added", "value": dict2[sheet]}
         return dict_return
     return formater(inner(dict1, dict2))
+
 
 def main():
 
@@ -88,7 +92,6 @@ def main():
         print(generate_diff(args.first_file, args.second_file, formater))
     else:
         print(generate_diff(args.first_file, args.second_file))
-
 
 
 if __name__ == "__main__":
