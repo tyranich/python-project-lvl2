@@ -17,10 +17,7 @@ file_yml, file_yml2 = parser_data(path_yml, path_yml_2)
 
 def test_default():
     done_dict = generate_diff(path_json, path_json_2)
-    print(done_dict)
-    a = "".join(stylish(done_dict))
-    print(a)
-    assert a == ("{    \n  - follow: false\n"
+    assert done_dict == ("{\n  - follow: false\n"
                  "    host: hexlet.io\n"
                  "  - proxy: 123.234.53.22\n"
                  "  - timeout: 50\n"
@@ -30,12 +27,12 @@ def test_default():
     """
     done_dict = generate_diff(file_json2, file_json)
     print(done_dict)
-    assert "".join(stylish(done_dict)) == ('{    \n  - follow: false\n'
-                                           '    host: hexlet.io\n'
-                                           '  - proxy: 123.234.53.22\n'
-                                           '  - timeout: 50\n'
-                                           '  + timeout: 20\n'
-                                           '  + verbose: true\n}')
+    assert "".join(stylish(done_dict)) == ('{\n  - follow: false\n'
+                                           'host: hexlet.io\n'
+                                           '- proxy: 123.234.53.22\n'
+                                           '- timeout: 50\n'
+                                           '+ timeout: 20\n'
+                                           '+ verbose: true\n}')
     
     done_dict = generate_diff(file_yml, file_yml2)
     print(done_dict)
