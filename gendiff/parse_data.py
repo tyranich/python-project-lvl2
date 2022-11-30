@@ -5,7 +5,7 @@ import yaml
 def parser_data(path1, path2):
 
     if path1 and path2:
-        if path1.endswith('.yaml') or path2.endswith('.yml'):
+        if path1.endswith('.yaml') or path1.endswith('.yml'):
             if path2.endswith('.yaml') or path2.endswith('.yml'):
                 file1 = yaml.load(open(path1), yaml.SafeLoader)
                 file2 = yaml.load(open(path2), yaml.SafeLoader)

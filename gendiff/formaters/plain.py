@@ -1,4 +1,4 @@
-from gendiff.scripts.getters import changed_for_json, get_value
+from gendiff.getters import changed_for_json, get_value
 
 
 def is_string(val):
