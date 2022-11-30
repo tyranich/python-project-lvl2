@@ -1,7 +1,8 @@
-import os 
+import os
 import pytest
 
 FOLDER_FIXTURE = 'fixtures'
+
 
 # plain file1 for test
 @pytest.fixture(scope='session')

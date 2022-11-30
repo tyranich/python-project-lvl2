@@ -11,4 +11,3 @@ def parser_args():
                         default="stylish", help='set format of output')
     args = parser.parse_args()
     return args
-    
