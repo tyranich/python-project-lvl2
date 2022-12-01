@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "hexlet-code"
 version = "0.1.0"
-description = ""
-authors = ["tyranich <63128958+tyranich@users.noreply.github.com>"]
+description = "compares xml and json files"
+repository = "https://github.com/tyranich/python-project-lvl2"
+authors = ["tyranich <tyranich@mail.ru>"]
 license = "MIT"
 packages = [
     { include = "gendiff"},

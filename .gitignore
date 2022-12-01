@@ -1,2 +1,7 @@
 new_diff.pygit
 /test/
+/dist/
+.coverage
+cc-test-reporter
+/gendiff/__pycache__/
+/test/__pycache__/
