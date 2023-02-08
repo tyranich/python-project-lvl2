@@ -23,7 +23,7 @@ patch:
 
 lint:
 	poetry run flake8 gendiff
-
+0
 test:
 	poetry run pytest -vv
 
