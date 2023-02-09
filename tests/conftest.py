@@ -73,6 +73,7 @@ def result_render(request):
     assert getattr(request.module, 'FORMATTER', None)
     result_path = os.path.join(os.path.dirname(__file__),
                                FOLDER_FIXTURE,
-                               request.module.FORMATTER + request.module.FILEMODE)
+                               request.module.FORMATTER
+                               + request.module.FILEMODE)
     with open(result_path) as file:
         return file.read()
