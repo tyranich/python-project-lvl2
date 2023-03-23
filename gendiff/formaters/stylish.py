@@ -1,121 +1,69 @@
-from gendiff.getters import changed_for_json, get_value, get_children
-
-SING_IDENT = 1
-DOUBLE_IDENT = 2
-TABS_TWO = "  "
+from gendiff.getters import changed_for_json
 
 
-def get_name(dict_):
-    for _, _1 in dict_.items():
-        return _
+TWO_INDIEND = "  "
+SIGN_TYPE = {"added": "+", "deleted": "-", "not changed": " "}
 
 
-def dict_string(dict_, level):
-    str_ = []
-    tabs = "  "
+def to_string(val, depth):
+    if isinstance(val, dict):
+        return_list = []
+        return_list.append(f"{'{'}")
 
-    def inner(dict1, level_, string_):
-        childs = get_children(dict1)
-        level_ += 2
-        for _ in childs:
+        def inner(val, return_list, depth=0):
+            depth = depth
+            for key in val.keys():
+                if isinstance(val[key], dict):
+                    indient = (depth + 3) * TWO_INDIEND
+                    return_list.append(f"{indient}{key}: {'{'}")
+                    depth += 2
+                    inner(val[key], return_list, depth)
+                    depth -= 2
+                else:
 
-            if isinstance(childs[_], dict):
-                string_.append((tabs * level_) + _ + ": {\n")
-                inner(childs[_], level_, string_)
-            else:
-                string_.append((tabs * (level_)) + "{}: {}"
-                               .format(_, changed_for_json(childs[_])) + "\n")
-        level_ -= 1
-        string_.append(tabs * (level_ - 1) + "}\n")
-        return string_
-    return inner(dict_, level, str_)
-
-
-def if_added(changeable_str, dict_proces, level, name):
-    if isinstance(get_value(dict_proces), dict):
-        changeable_str.append("{}+ {}: {{\n".format(
-                              TABS_TWO * (level + SING_IDENT), name,))
-        с = "".join(dict_string(get_value(
-                    dict_proces), level + DOUBLE_IDENT))
-        changeable_str.append("{}".format(с))
+                    indient = (depth + 3) * TWO_INDIEND
+                    value = val[key]
+                    return_list.append(f"{indient}{key}: {value}")
+            indient = TWO_INDIEND * (depth + 1)
+            return_list.append(f"{indient}{'}'}")
+            return return_list
+        return "\n".join(inner(val, return_list, depth))
     else:
-        changeable_str.append("{}+ {}: {}\n".format(
-                              TABS_TWO * (level + SING_IDENT),
-                              name, get_value(dict_proces)))
-
-
-def if_deleted(changeable_str, dict_proces, level, name):
-    if isinstance(get_value(dict_proces), dict):
-        changeable_str.append("{}- {}: {{\n".format(
-                              TABS_TWO * (level + SING_IDENT), name,))
-        с = "".join(dict_string(get_value(dict_proces),
-                    level + DOUBLE_IDENT))
-        changeable_str.append("{}".format(с))
-    else:
-        changeable_str.append("{}- {}: {}\n".format(
-                              TABS_TWO * (level + SING_IDENT),
-                              name, get_value(dict_proces)))
-
-
-def if_changed(changeable_str, dict_proces, level, name):
-    if isinstance(dict_proces["value1"], dict):
-        changeable_str.append("{}- {}: {{\n".format(
-                              TABS_TWO * (level + SING_IDENT), name,))
-        с = "".join(dict_string(dict_proces["value1"],
-                    level + DOUBLE_IDENT))
-        changeable_str.append("{}".format(с))
-    else:
-        changeable_str.append("{}- {}: {}\n".format(
-                              TABS_TWO * (level + SING_IDENT),
-                              name, changed_for_json(dict_proces["value1"])))
-    if isinstance(dict_proces["value2"], dict):
-        changeable_str.append("{}+ {}: {{\n".format(
-                              TABS_TWO * (level + SING_IDENT), name,))
-        с = "".join(dict_string(dict_proces["value2"],
-                    level + DOUBLE_IDENT))
-        changeable_str.append("{}".format(с))
-    else:
-        changeable_str.append("{}+ {}: {}\n".format(
-                              TABS_TWO * (level + SING_IDENT),
-                              name, changed_for_json(dict_proces["value2"])))
-
-
-def if_not_changed(changeable_str, dict_proces, level, name):
-    changeable_str.append("{}{}: {}\n".format(
-                          TABS_TWO * (level + DOUBLE_IDENT),
-                          name, get_value(dict_proces)))
-
-
-def chose_status(dict_status, changeable_str, dict_proces, level, name):
-
-    if dict_status == "added":
-        return_function = if_added(changeable_str, dict_proces, level, name)
-    elif dict_status == "deleted":
-        return_function = if_deleted(changeable_str, dict_proces, level, name)
-    elif dict_status == "changed":
-        return_function = if_changed(changeable_str, dict_proces, level, name)
-    elif dict_status == "not changed":
-        return_function = if_not_changed(changeable_str,
-                                         dict_proces, level, name)
-
-    return return_function
+        return val
 
 
 def stylish(_dict):
-    return_str = ["{\n"]
-    level = 0
+    return_string = [f"{'{'}"]
 
-    def create_str(return_str, level, _dict, key=None):
-        for _ in _dict.keys():
-            if _dict[_]["status"] == "dict":
-                return_str.append("{}{}: {{\n".format(
-                                  TABS_TWO * (level + DOUBLE_IDENT), _))
-                create_str(return_str, level + 2, get_value(_dict[_]))
-                return_str.append("{}}}\n".format(
-                                  TABS_TWO * (level + DOUBLE_IDENT)))
+    def inner(_dict, return_string, depth=0):
+        for key in _dict.keys():
+            if _dict[key]["type"] == "dict":
+                depth += 2
+                indient = TWO_INDIEND * (depth)
+                return_string.append(f"{indient}{key}: {'{'}")
+                value = _dict[key]['value']
+                inner(value, return_string, depth)
+                depth -= 2
+                return_string.append(f"{indient}{'}'}")
+
+            elif _dict[key]["type"] == "changed":
+                indient = TWO_INDIEND * (depth + 1)
+                value1 = to_string(changed_for_json(_dict[key]["value1"]),
+                                   depth + 1)
+                value2 = to_string(changed_for_json(_dict[key]["value2"]),
+                                   depth + 1)
+                return_string.append((f"{indient}- {key}: {value1}\n{indient}+ {key}: \
+                                      {value2}"))
+
             else:
-                chose_status(_dict[_]["status"], return_str, _dict[_], level, _)
-        if level == 0:
-            return_str.append("}")
-        return return_str
-    return "".join(create_str(return_str, level, _dict))
+                type = _dict[key]["type"]
+                indient = TWO_INDIEND * (depth + 1)
+                value = to_string(changed_for_json(_dict[key]["value"]),
+                                  depth + 1)
+                return_string.append(f"{indient}{SIGN_TYPE[type]} {key}: \
+                                    {value}")
+
+        if depth == 0:
+            return_string.append(f"{'}'}")
+        return return_string
+    return "\n".join(inner(_dict, return_string))

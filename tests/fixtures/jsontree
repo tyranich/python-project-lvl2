@@ -1,53 +1,53 @@
 {
     "common": {
-        "status": "dict",
+        "type": "dict",
         "value": {
             "follow": {
-                "status": "added",
+                "type": "added",
                 "value": false
             },
             "setting1": {
-                "status": "not changed",
+                "type": "not changed",
                 "value": "Value 1"
             },
             "setting2": {
-                "status": "deleted",
+                "type": "deleted",
                 "value": 200
             },
             "setting3": {
-                "status": "changed",
+                "type": "changed",
                 "value1": true,
                 "value2": null
             },
             "setting4": {
-                "status": "added",
+                "type": "added",
                 "value": "blah blah"
             },
             "setting5": {
-                "status": "added",
+                "type": "added",
                 "value": {
                     "key5": "value5"
                 }
             },
             "setting6": {
-                "status": "dict",
+                "type": "dict",
                 "value": {
                     "doge": {
-                        "status": "dict",
+                        "type": "dict",
                         "value": {
                             "wow": {
-                                "status": "changed",
+                                "type": "changed",
                                 "value1": "",
                                 "value2": "so much"
                             }
                         }
                     },
                     "key": {
-                        "status": "not changed",
+                        "type": "not changed",
                         "value": "value"
                     },
                     "ops": {
-                        "status": "added",
+                        "type": "added",
                         "value": "vops"
                     }
                 }
@@ -55,19 +55,19 @@
         }
     },
     "group1": {
-        "status": "dict",
+        "type": "dict",
         "value": {
             "baz": {
-                "status": "changed",
+                "type": "changed",
                 "value1": "bas",
                 "value2": "bars"
             },
             "foo": {
-                "status": "not changed",
+                "type": "not changed",
                 "value": "bar"
             },
             "nest": {
-                "status": "changed",
+                "type": "changed",
                 "value1": {
                     "key": "value"
                 },
@@ -76,7 +76,7 @@
         }
     },
     "group2": {
-        "status": "deleted",
+        "type": "deleted",
         "value": {
             "abc": 12345,
             "deep": {
@@ -85,7 +85,7 @@
         }
     },
     "group3": {
-        "status": "added",
+        "type": "added",
         "value": {
             "deep": {
                 "id": {

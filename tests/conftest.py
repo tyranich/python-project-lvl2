@@ -4,7 +4,6 @@ import pytest
 FOLDER_FIXTURE = 'fixtures'
 
 
-# plain file1 for test
 @pytest.fixture(scope='session')
 def file1_json_path():
     return os.path.join(os.path.dirname(__file__),
@@ -12,7 +11,6 @@ def file1_json_path():
                         'file1.json')
 
 
-# plain file2 for test
 @pytest.fixture(scope='session')
 def file2_json_path():
     return os.path.join(os.path.dirname(__file__),
@@ -20,7 +18,6 @@ def file2_json_path():
                         'file2.json')
 
 
-# plain file1 for test
 @pytest.fixture(scope='session')
 def file1_yml_path():
     return os.path.join(os.path.dirname(__file__),
@@ -28,7 +25,6 @@ def file1_yml_path():
                         'file1.yml')
 
 
-# plain file2 for test
 @pytest.fixture(scope='session')
 def file2_yml_path():
     return os.path.join(os.path.dirname(__file__),
@@ -36,7 +32,6 @@ def file2_yml_path():
                         'file2.yaml')
 
 
-# nested file1 for test
 @pytest.fixture(scope='session')
 def file1_tree_json_path():
     return os.path.join(os.path.dirname(__file__),
@@ -44,7 +39,6 @@ def file1_tree_json_path():
                         'file1tree.json')
 
 
-# nested file2 for test
 @pytest.fixture(scope='session')
 def file2_tree_json_path():
     return os.path.join(os.path.dirname(__file__),
@@ -52,7 +46,6 @@ def file2_tree_json_path():
                         'file2tree.json')
 
 
-# nested file1 for test
 @pytest.fixture(scope='session')
 def file1_tree_yml_path():
     return os.path.join(os.path.dirname(__file__),
@@ -60,7 +53,6 @@ def file1_tree_yml_path():
                         'file1tree.yml')
 
 
-# nested file2 for test
 @pytest.fixture(scope='session')
 def file2_tree_yml_path():
     return os.path.join(os.path.dirname(__file__),
@@ -68,12 +60,53 @@ def file2_tree_yml_path():
                         'file2tree.yaml')
 
 
-@pytest.fixture(scope='function')
-def result_render(request):
-    assert getattr(request.module, 'FORMATTER', None)
+@pytest.fixture(scope='session')
+def result_jsontree():
     result_path = os.path.join(os.path.dirname(__file__),
                                FOLDER_FIXTURE,
-                               request.module.FORMATTER
-                               + request.module.FILEMODE)
+                               'jsontree')
     with open(result_path) as file:
         return file.read()
+
+
+@pytest.fixture(scope='session')
+def result_plaintree():
+    result_path = os.path.join(os.path.dirname(__file__),
+                               FOLDER_FIXTURE,
+                               'plaintree')
+    with open(result_path) as file:
+        return file.read()
+
+
+@pytest.fixture(scope='session')
+def result_stylishplane():
+    result_path = os.path.join(os.path.dirname(__file__),
+                               FOLDER_FIXTURE,
+                               'stylishplane')
+    with open(result_path) as file:
+        return file.read()
+
+
+@pytest.fixture(scope='session')
+def result_stylishtree():
+    result_path = os.path.join(os.path.dirname(__file__),
+                               FOLDER_FIXTURE,
+                               'stylishtree')
+
+    with open(result_path) as file:
+        return file.read()
+
+
+@pytest.fixture(scope='session')
+def formater_stylish():
+    return "stylish"
+
+
+@pytest.fixture(scope='session')
+def formater_plain():
+    return "plain"
+
+
+@pytest.fixture(scope='session')
+def formater_json():
+    return "json"
