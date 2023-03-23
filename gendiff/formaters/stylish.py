@@ -52,16 +52,16 @@ def stylish(_dict):
                                    depth + 1)
                 value2 = to_string(changed_for_json(_dict[key]["value2"]),
                                    depth + 1)
-                return_string.append((f"{indient}- {key}: {value1}\n{indient}+ {key}: \
-                                      {value2}"))
+                return_string.append((f"{indient}- {key}: {value1}\n{indient}+ {key}: "
+                                      f"{value2}"))
 
             else:
                 type = _dict[key]["type"]
                 indient = TWO_INDIEND * (depth + 1)
                 value = to_string(changed_for_json(_dict[key]["value"]),
                                   depth + 1)
-                return_string.append(f"{indient}{SIGN_TYPE[type]} {key}: \
-                                    {value}")
+                return_string.append(f"{indient}{SIGN_TYPE[type]} {key}: "
+                                    f"{value}")
 
         if depth == 0:
             return_string.append(f"{'}'}")

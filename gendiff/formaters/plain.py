@@ -42,17 +42,17 @@ def plain(_dict):  # noqa: C901
                 next_name = measure_name
             elif _dict[key]["type"] == "added":
                 value = to_string(changed_for_json(_dict[key]["value"]))
-                return_string.append("Property '{}{}' was added with value: \
-                                     {}".format(next_name, key, value))
+                return_string.append(f"Property '{next_name}{key}'"
+                                     f" was added with value: {value}")
             elif _dict[key]["type"] == "deleted":
                 value = to_string(changed_for_json(_dict[key]["value"]))
-                return_string.append("Property '{}{}' was removed".
-                                     format(next_name, key))
+                return_string.append(f"Property '{next_name}{key}'"
+                                     f" was removed")
             elif _dict[key]["type"] == "changed":
                 value1 = to_string(changed_for_json(_dict[key]["value1"]))
                 value2 = to_string(changed_for_json(_dict[key]["value2"]))
-                return_string.append("Property '{}{}' was updated. From {} to \
-                                     {}".format(next_name, key, value1, value2))
+                return_string.append(f"Property '{next_name}{key}' was "
+                                     f"updated. From {value1} to {value2}")
         return return_string
 
     return "\n".join(inner(_dict, return_string))
