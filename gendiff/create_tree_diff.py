@@ -28,5 +28,4 @@ def build_tree_diff(dict1, dict2):
             dict_return[sheet] = {"type": "changed",
                                   "value1": dict1[sheet],
                                   "value2": dict2[sheet]}
-    print(dict_return)
     return dict_return

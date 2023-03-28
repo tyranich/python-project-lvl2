@@ -33,18 +33,18 @@ def to_string(val, depth):
 
 
 def stylish(_dict):
-    return_string = [f"{'{'}"]
+    return_string = [f"{'{'}\n"]
 
     def inner(_dict, return_string, depth=0):
         for key in _dict.keys():
             if _dict[key]["type"] == "dict":
                 depth += 2
                 indient = TWO_INDIEND * (depth)
-                return_string.append(f"{indient}{key}: {'{'}")
+                return_string.append(f"{indient}{key}: {'{'}\n")
                 value = _dict[key]['value']
                 inner(value, return_string, depth)
                 depth -= 2
-                return_string.append(f"{indient}{'}'}")
+                return_string.append(f"{indient}{'}'}\n")
 
             elif _dict[key]["type"] == "changed":
                 indient = TWO_INDIEND * (depth + 1)
@@ -52,9 +52,10 @@ def stylish(_dict):
                                    depth + 1)
                 value2 = to_string(changed_for_json(_dict[key]["value2"]),
                                    depth + 1)
-                return_string.append((f"{indient}- {key}: {value1}\n"
-                                      f"{indient}+ {key}: "
-                                      f"{value2}"))
+                return_string.append("{}- {}: {}\n".
+                                     format(indient, key, value1))
+                return_string.append("{}+ {}: {}\n".
+                                     format(indient, key, value2))
 
             else:
                 type = _dict[key]["type"]
@@ -62,9 +63,9 @@ def stylish(_dict):
                 value = to_string(changed_for_json(_dict[key]["value"]),
                                   depth + 1)
                 return_string.append(f"{indient}{SIGN_TYPE[type]} {key}: "
-                                     f"{value}")
+                                     f"{value}\n")
 
         if depth == 0:
             return_string.append(f"{'}'}")
         return return_string
-    return "\n".join(inner(_dict, return_string))
+    return "".join(inner(_dict, return_string))
