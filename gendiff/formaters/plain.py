@@ -1,3 +1,5 @@
+from gendiff.getters import changed_for_json
+
 
 def to_string(val):
 
@@ -14,17 +16,6 @@ def to_string(val):
             return val
         else:
             return "'{}'".format(val)
-    else:
-        return val
-
-
-def changed_for_json(val):
-    if val is True:
-        return "true"
-    elif val is None:
-        return "null"
-    elif val is False:
-        return "false"
     else:
         return val
 

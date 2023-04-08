@@ -1,71 +1,62 @@
 from gendiff.getters import changed_for_json
 
 
+FOUR_INDIEND = "    "
 TWO_INDIEND = "  "
 SIGN_TYPE = {"added": "+", "deleted": "-", "not changed": " "}
 
 
-def to_string(val, depth):
+def to_string(key, val, depth, symbol="", return_list=[]):
     if isinstance(val, dict):
-        return_list = []
-        return_list.append(f"{'{'}")
-
-        def inner(val, return_list, depth=0):
-            depth = depth
-            for key in val.keys():
-                if isinstance(val[key], dict):
-                    indient = (depth + 3) * TWO_INDIEND
-                    return_list.append(f"{indient}{key}: {'{'}")
-                    depth += 2
-                    inner(val[key], return_list, depth)
-                    depth -= 2
-                else:
-
-                    indient = (depth + 3) * TWO_INDIEND
-                    value = val[key]
-                    return_list.append(f"{indient}{key}: {value}")
-            indient = TWO_INDIEND * (depth + 1)
-            return_list.append(f"{indient}{'}'}")
-            return return_list
-        return "\n".join(inner(val, return_list, depth))
+        return_list.append("{}{}{} {}: {{".
+                           format(FOUR_INDIEND * depth,
+                                  TWO_INDIEND, symbol, key))
+        depth += 1
+        for key_in, val_in in val.items():
+            to_string(key_in, val_in, depth, " ", return_list)
+        return_list.append("{}}}".format(FOUR_INDIEND * depth))
+        depth -= 1
     else:
-        return val
+        return_list.append("{}{}{} {}: {}".format(FOUR_INDIEND * depth,
+                                                  TWO_INDIEND,
+                                                  symbol, key, val))
+    return return_list
 
 
-def stylish(_dict):
-    return_string = [f"{'{'}\n"]
+def raw_stylish(_dict, return_string=[], depth=0):
+    for key in _dict.keys():
+        if _dict[key]["type"] == "dict":
+            depth += 1
+            indient = FOUR_INDIEND * (depth)
+            return_string.append(f"{indient}{key}: {'{'}")
+            value = _dict[key]['value']
+            return_string.extend(raw_stylish(value,
+                                             return_string=[],
+                                             depth=depth))
+            depth -= 1
+            return_string.append(f"{indient}{'}'}")
 
-    def inner(_dict, return_string, depth=0):
-        for key in _dict.keys():
-            if _dict[key]["type"] == "dict":
-                depth += 2
-                indient = TWO_INDIEND * (depth)
-                return_string.append(f"{indient}{key}: {'{'}\n")
-                value = _dict[key]['value']
-                inner(value, return_string, depth)
-                depth -= 2
-                return_string.append(f"{indient}{'}'}\n")
+        elif _dict[key]["type"] == "changed":
+            value1 = to_string(key, changed_for_json(_dict[key]["value1"]),
+                               depth, SIGN_TYPE["deleted"],
+                               return_list=[])
+            value2 = to_string(key, changed_for_json(_dict[key]["value2"]),
+                               depth, SIGN_TYPE["added"],
+                               return_list=[])
+            return_string.extend(value1)
+            return_string.extend(value2)
 
-            elif _dict[key]["type"] == "changed":
-                indient = TWO_INDIEND * (depth + 1)
-                value1 = to_string(changed_for_json(_dict[key]["value1"]),
-                                   depth + 1)
-                value2 = to_string(changed_for_json(_dict[key]["value2"]),
-                                   depth + 1)
-                return_string.append("{}- {}: {}\n".
-                                     format(indient, key, value1))
-                return_string.append("{}+ {}: {}\n".
-                                     format(indient, key, value2))
+        else:
+            type = _dict[key]["type"]
+            value = to_string(key, changed_for_json(_dict[key]["value"]),
+                              depth, SIGN_TYPE[type], return_list=[])
+            return_string.extend(value)
+    return return_string
 
-            else:
-                type = _dict[key]["type"]
-                indient = TWO_INDIEND * (depth + 1)
-                value = to_string(changed_for_json(_dict[key]["value"]),
-                                  depth + 1)
-                return_string.append(f"{indient}{SIGN_TYPE[type]} {key}: "
-                                     f"{value}\n")
 
-        if depth == 0:
-            return_string.append(f"{'}'}")
-        return return_string
-    return "".join(inner(_dict, return_string))
+def stylish(tree):
+    result_stylish = list()
+    result_stylish.append("{")
+    result_stylish.extend(raw_stylish(tree))
+    result_stylish.append("}")
+    return "\n".join(result_stylish)

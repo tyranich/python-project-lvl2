@@ -1,10 +1,9 @@
+import json
+
+
 def changed_for_json(val):
-    if val is True:
-        return "true"
-    elif val is None:
-        return "null"
-    elif val is False:
-        return "false"
+    if isinstance(val, bool) or val is None:
+        return json.dumps(val)
     else:
         return val
 
