@@ -30,7 +30,7 @@ FILES_FOR_TESTS_6 = ('file1_tree_yml_path', 'file2_tree_yml_path',
                          [pytest.lazy_fixture(FILES_FOR_TESTS_1),
                           pytest.lazy_fixture(FILES_FOR_TESTS_2),
                           pytest.lazy_fixture(FILES_FOR_TESTS_3),
-                          #pytest.lazy_fixture(FILES_FOR_TESTS_4),
+                          pytest.lazy_fixture(FILES_FOR_TESTS_4),
                           pytest.lazy_fixture(FILES_FOR_TESTS_5),
                           pytest.lazy_fixture(FILES_FOR_TESTS_6),
                           ])
